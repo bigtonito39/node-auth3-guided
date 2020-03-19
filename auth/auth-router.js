@@ -46,15 +46,21 @@ router.post("/login", async (req, res, next) => {
 			userId: user.id,
 			userRole: "admin", // this would normally come from a database
 		}
+       // You can use this to expire cookie in 8 hours
+		const options = {
+			expiresIn: '8h'
+		}
 		
 		// generate a new JWT and cryptographically sign
-		const token = jwt.sign(payload, process.env.JWT_SECRET)
+		const token = jwt.sign(payload, process.env.JWT_SECRET , options)
+
+		
 
 		// sends a Set-Cookie header with the value of the token
 		res.cookie("token", token)
 		
-		res.json({
-			message: `Welcome ${user.username}!`,
+		res.json({                               //please token here if you want to make sure token went through
+			message: `Welcome ${user.username}!`,  token
 		})
 	} catch(err) {
 		next(err)
